@@ -47,7 +47,7 @@ pipeline{
         stage('Deploy to Kubernetes') {
             steps {
                 container('kubectl') {
-                    sh "sed -i 's|BUILD_TAG|$BUILD_TAG|g' deployment.yaml"
+                    sh "sed -i 's|BUILD_TAG|$BUILD_TAG|g' devops/deployment.yaml"
                     step([$class: 'KubernetesDeploy', authMethod: 'certs', apiServerUrl: 'https://kubernetes.default.svc.cluster.local:443', credentialsId:'k8sCertAuth', config: 'deployment.yaml', variableState: ''])
                 }
             }
