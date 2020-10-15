@@ -21,7 +21,7 @@ pipeline{
         stage('Package'){
           steps{
               container("node") {
-                  sh "npm install --registry=https://registry.npm.taobao.org"
+                  sh "npm install -g cnpm --registry=https://registry.npm.taobao.org"
                   sh "npm run build:prod"
               }
           }
