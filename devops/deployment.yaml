@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vue-element-admin
+  namespace: nfplus-web
+  labels:
+    app: vue-element-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vue-element-admin
+  template:
+    metadata:
+      labels:
+        app: vue-element-admin
+    spec:
+      containers:
+        - name: vue-element-admin
+          image: registry-vpc.cn-shenzhen.aliyuncs.com/nfplus-dev/vue-element-admin:1.0-SNAPSHOT
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+            - name: build_tag
+              value: BUILD_TAG
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: jiangch-docker-password-vpc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.kubernetes.io/alicloud-loadbalancer-force-override-listeners: "true"
+    service.beta.kubernetes.io/alicloud-loadbalancer-id: lb-wz976hmsbhztfawqhxdq9
+  name: vue-element-admin-svc
+  namespace: nfplus-web
+spec:
+  ports:
+    - name: port
+      port: 9527
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: vue-element-admin
+  type: LoadBalancer
+
