@@ -4,11 +4,8 @@ name: CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: push
+
 env:
   NODE_VERSION: '10.x'                # set this to the node version to use
   IMAGE_URL: registry.cn-shenzhen.aliyuncs.com/devan/vue-element-admin
