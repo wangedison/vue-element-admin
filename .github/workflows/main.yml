@@ -8,7 +8,10 @@ on: push
 
 env:
   NODE_VERSION: '10.x'                # set this to the node version to use
-  IMAGE_URL: registry.cn-shenzhen.aliyuncs.com/devan/vue-element-admin
+  DOCKER_REPO: registry.cn-shenzhen.aliyuncs.com/devan
+  IMAGE_NAME: vue-element-admin
+  IMAGE_TAG: ${GITHUB_SHA}
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -26,7 +29,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - name: npm install, build, and test
         run: |
-          # Build and test the project
+          # Build the project
           npm install
           npm run build:prod
 
@@ -35,7 +38,6 @@ jobs:
 
       - name: Build the Docker image
         run: |
-          docker ps
           docker login --username=${{secrets.DOCKER_USERNAME}} --password=${{secrets.DOCKER_PASSWORD}} registry.cn-shenzhen.aliyuncs.com
-          docker build . --file devops/Dockerfile --tag ${IMAGE_URL}:${GITHUB_SHA}
-          docker push ${IMAGE_URL}:${GITHUB_SHA}
+          docker build . --file devops/Dockerfile --tag ${DOCKER_REPO}/${IMAGE_NAME}:${IMAGE_TAG}
+          docker push ${DOCKER_REPO}/${IMAGE_NAME}:${IMAGE_TAG}
